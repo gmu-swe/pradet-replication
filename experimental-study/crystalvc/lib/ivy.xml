@@ -1,0 +1,15 @@
+<ivy-module version='2.0'>
+  <info organisation='modcrystal' module='modcrystal' />
+  <configurations defaultconfmapping='compile-&gt;master(default)'>
+    <conf name='compile' description='Compile dependencies' />
+    <conf name='runtime' description='Runtime dependencies' extends='compile' />
+    <conf name='test' description='Test dependencies' extends='runtime' />
+  </configurations>
+  <dependencies>
+    <dependency org='commons-io' name='commons-io' rev='1.4' />
+    <dependency org='org.jdom' name='jdom' rev='1.1' />
+    <dependency org='junit' name='junit' rev='4.8.1' />
+    <dependency org='log4j' name='log4j' rev='1.2.15' />
+    <dependency org='NA' name='hgKit-279.jar' rev='NA' />
+  </dependencies>
+</ivy-module>

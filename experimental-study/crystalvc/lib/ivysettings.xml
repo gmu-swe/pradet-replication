@@ -1,0 +1,14 @@
+<ivysettings>
+  <settings defaultResolver='maven-repos' />
+  <resolvers>
+    <chain name='maven-repos'>
+      <ibiblio name='central' m2compatible='true' />
+    </chain>
+    <filesystem name='local'>
+      <artifact pattern='${ivy.settings.dir}/lib/[artifact]' />
+    </filesystem>
+  </resolvers>
+  <modules>
+    <module organisation='NA' resolver='local' />
+  </modules>
+</ivysettings>

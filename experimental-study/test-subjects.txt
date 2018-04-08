@@ -1,0 +1,5 @@
+Crystal,1a11279
+XML Security,v 1.0.4
+Synoptic,d5ea6fb 
+jodatime,b609d7d
+
