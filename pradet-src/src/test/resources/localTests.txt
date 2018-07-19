@@ -1,0 +1,3 @@
+de.unisaarland.cs.st.cut.ParameterizedPassPass parameterizedPassPass1
+de.unisaarland.cs.st.cut.ParameterizedPassPass parameterizedPassPass2
+de.unisaarland.cs.st.cut.ParameterizedPassFail parameterizedPassFail2

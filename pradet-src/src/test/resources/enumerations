@@ -1,0 +1,6 @@
+crystal.model.DataSource$RepoKind
+crystal.model.RevisionHistory$Action
+crystal.model.RevisionHistory$Capable
+crystal.model.RevisionHistory$Ease
+crystal.model.RevisionHistory$When
+crystal.server.AbstractLogParser$CheckpointLabels

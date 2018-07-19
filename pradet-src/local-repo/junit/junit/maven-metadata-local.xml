@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>junit</groupId>
+  <artifactId>junit</artifactId>
+  <versioning>
+    <release>4.12-PRADET</release>
+    <versions>
+      <version>4.12-PRADET</version>
+      <version>4.11-PRADET</version>
+    </versions>
+    <lastUpdated>20170724073624</lastUpdated>
+  </versioning>
+</metadata>

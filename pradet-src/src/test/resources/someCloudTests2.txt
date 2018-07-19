@@ -1,0 +1,6 @@
+de.unisaarland.cs.st.cut.NoRunnerPassPass noRunnerPassPass2
+de.unisaarland.cs.st.cut.NoRunnerPassFail noRunnerPassFail1
+de.unisaarland.cs.st.cut.NoRunnerPassFail noRunnerPassFail2
+de.unisaarland.cs.st.cut.DefaultRunnerPassPass defaultRunnerPassPass1
+de.unisaarland.cs.st.cut.DefaultRunnerFailFail defaultRunnerFailFail1
+de.unisaarland.cs.st.cut.DefaultRunnerFailFail defaultRunnerFailFail2

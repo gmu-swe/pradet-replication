@@ -1,0 +1,219 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.unisaarland.cs.st</groupId>
+	<artifactId>dependency-refiner</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>PRADET - Dependency Collector and Refiner</name>
+
+	<developers>
+		<developer>
+			<id>alessiogambi</id>
+			<organization>Saarland University</organization>
+		</developer>
+	</developers>
+
+	<!-- The local repo contains the patched versions of junit 4.11 and junit 
+		4.12 -->
+	<repositories>
+		<repository>
+			<id>local-repo</id>
+			<url>file:///${basedir}/local-repo</url>
+		</repository>
+	</repositories>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<junit.version>4.12-PRADET</junit.version>
+	</properties>
+
+	<dependencies>
+		<!-- https://github.com/ronmamo/reflections -->
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.11</version>
+		</dependency>
+
+		<!-- Command line parsing -->
+		<dependency>
+			<groupId>com.lexicalscope.jewelcli</groupId>
+			<artifactId>jewelcli</artifactId>
+			<version>0.8.9</version>
+		</dependency>
+
+		<!-- Test Dependency Management -->
+		<dependency>
+			<groupId>org.jgrapht</groupId>
+			<artifactId>jgrapht-core</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+
+		<!-- Input/Output file to CSV. TODO: really needed ? -->
+		<dependency>
+			<groupId>net.sf.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+		<!-- We build upon JUnit (e.g., JUnitCore) -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+
+		<!-- This is for collection, not sure we need to move it into a separate 
+			profile. In a way or another this must be on the CP of the various JUnitCore -->
+		<dependency>
+			<groupId>edu.gmu.swe</groupId>
+			<artifactId>DependencyDetector</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<!-- <scope>test</scope> -->
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<!-- Easily build an executable distribution -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>appassembler-maven-plugin</artifactId>
+				<version>1.10</version>
+				<configuration>
+					<programs>
+						<program>
+							<mainClass>de.unisaarland.cs.st.cut.refinement.DependencyRefiner</mainClass>
+							<id>dependency-refiner</id>
+						</program>
+						<program>
+							<mainClass>de.unisaarland.cs.st.cut.collection.DependencyCollector</mainClass>
+							<id>dependency-collector</id>
+						</program>
+						<program>
+							<mainClass>org.junit.runner.LocalJUnitCore</mainClass>
+							<id>execute-tests-with-junit-core</id>
+						</program>
+						<program>
+							<mainClass>de.unisaarland.cs.st.cut.DTDetectorClone</mainClass>
+							<id>dtdetector</id>
+						</program>
+					</programs>
+				</configuration>
+			</plugin>
+			<!-- Shade: we do not shade JUnit because we need to enforce out patched 
+				version -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<relocations>
+								<relocation>
+									<pattern>org.jgrapht</pattern>
+									<shadedPattern>org.shaded.jgrapht</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>com.lexicalscope</pattern>
+									<shadedPattern>com.shaded.lexicalscope</shadedPattern>
+								</relocation>
+								<relocation>
+									<pattern>net.sf</pattern>
+									<shadedPattern>net.shaded.sf</shadedPattern>
+								</relocation>
+
+								<!-- -->
+							</relocations>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+
+	<profiles>
+		<!-- Produce an additional artifact for collecting test names and reference 
+			test output -->
+		<profile>
+			<id>test-listener</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>3.0.2</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+								<configuration>
+									<classifier>test-listener</classifier>
+									<includes>
+										<include>de/unisaarland/cs/st/cut/junit/**</include>
+									</includes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- Required for getting the deps right -->
+		<profile>
+			<id>4.11</id>
+			<properties>
+				<junit.version>4.11-PRADET</junit.version>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>appassembler-maven-plugin</artifactId>
+						<version>1.10</version>
+						<configuration>
+							<programs>
+								<program>
+									<mainClass>de.unisaarland.cs.st.cut.refinement.DependencyRefiner</mainClass>
+									<id>dependency-refiner-4-11</id>
+								</program>
+								<program>
+									<mainClass>de.unisaarland.cs.st.cut.collection.DependencyCollector</mainClass>
+									<id>dependency-collector-4-11</id>
+								</program>
+								<program>
+									<mainClass>org.junit.runner.LocalJUnitCore</mainClass>
+									<id>execute-tests-with-junit-core-4-11</id>
+								</program>
+								<program>
+									<mainClass>de.unisaarland.cs.st.cut.DTDetectorClone</mainClass>
+									<id>dtdetector-4-11</id>
+								</program>
+							</programs>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
